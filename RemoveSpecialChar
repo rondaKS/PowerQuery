@@ -1,0 +1,8 @@
+Excel Formula to remove special characters, has to be manually entered into the Formula/Name
+
+=LAMBDA(string, chars, IF(chars<>"", RemoveChars(SUBSTITUTE(string, LEFT(chars, 1), ""), RIGHT(chars, LEN(chars) -1)), string))
+
+Use in Excel Cell =RemoveChars(A1, "!@#$%^&*()<>,.:;")  have to replace " separately or spaces
+
+
+From <https://www.ablebits.com/office-addins-blog/delete-special-unwanted-characters-excel/#remove-special-char> 

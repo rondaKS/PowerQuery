@@ -1,0 +1,10 @@
+Formulas to use in Excel Data Validation
+
+=INDIRECT("Functions[Opr Unit]")
+
+When referencing a table
+
+
+=OFFSET(B1,MATCH(D2,INDIRECT("Functions[Opr Unit]"),0),0,COUNTIF(INDIRECT("Functions[Opr Unit]"),D2),1)
+
+When creating a dependent drop down list Functions to the Opr Unit

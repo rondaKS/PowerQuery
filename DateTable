@@ -1,0 +1,24 @@
+EarliestDate  / LatestDate would be updated to List.Max
+
+let
+    Source = Excel.Workbook(File.Contents("C:\Training Plan Reporting Data.xlsx"), null, true),
+    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data],
+    #"Removed Other Columns" = Table.SelectColumns(Table1_Table,{"End Date"}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns",{{"End Date", type date}}),
+    #"Calculated Earliest" = List.Min(#"Changed Type"[End Date])
+in
+    #"Calculated Earliest"
+
+
+
+let
+    Source = {Number.From(EarliestDate)..Number.From(LatestDate)},
+    #"Converted to Table" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Changed Type" = Table.TransformColumnTypes(#"Converted to Table",{{"Column1", type date}}),
+    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Column1", "Date"}}),
+    #"Inserted Quarter" = Table.AddColumn(#"Renamed Columns", "Quarter", each Date.QuarterOfYear([Date]), Int64.Type),
+    #"Added Conditional Column" = Table.AddColumn(#"Inserted Quarter", "Qtr", each if [Quarter] = 1 then "Q2" else if [Quarter] = 2 then "Q3" else if [Quarter] = 3 then "Q4" else "Q1"),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Added Conditional Column",{{"Qtr", type text}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Changed Type1",{"Quarter"})
+in
+    #"Removed Columns"
